@@ -16,24 +16,26 @@ using GoogleConnect;
 
 namespace GoogleConnect
 {
-    [TestClass]
-    public class TestBase
+     public class TestBase
     {
         #region TestConfig
 
         public static IWebDriver driver;
         public static WebDriverWait timeout;
 
-        public static string Email = "wotcjupiter1";
+        public static string UserName = "wotcjupiter1";
         public static string Password = "spaceshuttle";
         public static string LOGIN_URL = "http://www.gmail.com";
         public static Utility.Browser DefaultBrowser = Utility.Browser.Chrome;
 
-        public static string EMAIL_TEXTBOX_ID = "identifierId";
-        public static string EMAIL_SUBMIT_BUTTON_ID = "identifierNext";
+        public static string USERNAME_TEXTBOX_ID = "identifierId";
+        public static string USERNAME_SUBMIT_BUTTON_ID = "identifierNext";
         public static string PASSWORD_TEXTBOX_ID = "password";
         public static string PASSWORD_SUBMIT_BUTTON_ID = "passwordNext";
-        public static string ACCOUNT_OPTIONS_DROPDOWN_ID = "gb_bb";
+
+        public static string COMPOSE_NEW_EMAIL_BUTTON_ID = "//div[contains(text(),'Compose')]";
+        public static string CLOSE_NEW_EMAIL_WINDOW_BUTTON_ID = "Ha";
+        public static string ACCOUNT_OPTIONS_DROPDOWN_ID = "//*[@class='gb_b gb_hb gb_R']";
         public static string SIGNOUT_BUTTON_ID = "gb_71";
         public static string LOGGED_IN_ID = ":k9";
 
@@ -49,29 +51,29 @@ namespace GoogleConnect
         /// <summary>
         /// Read in App.config
         /// </summary>
-        public static void LoadTestSettings()
+        public void LoadTestSettings()
         {
             //Read app config values for test infrastructure configuration. If missing use the default values  
 
-            string email = Utility.ReadConfigurationSetting(EMAIL_APP_CONFIG_ID);
+            string email = ReadConfigurationSetting(EMAIL_APP_CONFIG_ID);
             if (email != null)
             {
-                Email = email;
+                UserName = email;
             }
 
-            string password = Utility.ReadConfigurationSetting(PASSWORD_APP_CONFIG_ID);
+            string password = ReadConfigurationSetting(PASSWORD_APP_CONFIG_ID);
             if (password != null)
             {
                 Password = password;
             }
 
-            string seleniumDriversLocation = Utility.ReadConfigurationSetting(SELENIUM_DRIVERS_LOCATION_APP_CONFIG_ID);
+            string seleniumDriversLocation = ReadConfigurationSetting(SELENIUM_DRIVERS_LOCATION_APP_CONFIG_ID);
             if (seleniumDriversLocation != null)
             {
                 SELENIUM_DRIVERS_LOCATION = seleniumDriversLocation;
             }
 
-            string defaultBrowser = Utility.ReadConfigurationSetting(DEFAULT_BROWSER_APP_CONFIG_ID);
+            string defaultBrowser = ReadConfigurationSetting(DEFAULT_BROWSER_APP_CONFIG_ID);
             if (seleniumDriversLocation != null)
             {
                 DefaultBrowser = (Utility.Browser)Enum.Parse(typeof(Utility.Browser), defaultBrowser, true);
@@ -83,7 +85,7 @@ namespace GoogleConnect
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string ReadConfigurationSetting(string key)
+        public string ReadConfigurationSetting(string key)
         {
             var appSettings = ConfigurationManager.AppSettings;
             return appSettings[key];

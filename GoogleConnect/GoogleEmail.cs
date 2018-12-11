@@ -9,14 +9,33 @@ namespace GoogleConnect
     /// </summary>
     public class GoogleEmail
     {
-        public GoogleEmail(string from, string date, string subject)
+        //visible properties constructor
+        public GoogleEmail(string from, string subject, string date, bool unread)
         {
             From = from;
-            Date = date;
             Subject = subject;
+            Date = date;
+            Unread = unread;
         }
+
+        //extended properties constructor
+        public GoogleEmail(string from, string subject, string date, bool unread, string dateTime, string email, string partialBody)
+        {
+            From = from;
+            Subject = subject;
+            Date = date;
+            Unread = unread;
+            Email = email;
+            DateTime = dateTime;
+            partialBody = partialBody;
+        }
+
         public string From { get; set; }
         public string Date { get; set; }
         public string Subject { get; set; }
+        public bool Unread { get; set; }
+        public string Email { get; set; }
+        public string DateTime { get; set; }
+        public string PartialBody { get; set; }
     }
 }
