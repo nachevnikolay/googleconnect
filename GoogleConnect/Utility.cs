@@ -16,9 +16,12 @@ using GoogleConnect;
 
 namespace GoogleConnect
 {
+    [TestFixture]
     public class Utility : TestBase
     {
-        public string GetFullPath(string filePath)
+        int timeout = 10; // seconds
+
+        public static string GetFullPath(string filePath)
         {
             string solutionParentDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
             return Path.Combine(solutionParentDirectory, filePath);
@@ -31,22 +34,23 @@ namespace GoogleConnect
             InternetExplorer
         }
 
-        public static void StartBrowserDriver(Utility.Browser browser)
+        public static IWebDriver StartBrowserDriver(Utility.Browser browser)
         {
             switch (browser)
             {
                 case Utility.Browser.Chrome:
-                    TestBase.driver = new ChromeDriver(TestBase.SELENIUM_DRIVERS_LOCATION);
+                    TestBase.driver = new ChromeDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION));
                     break;
                 case Utility.Browser.Firefox:
-                    TestBase.driver = new FirefoxDriver(TestBase.SELENIUM_DRIVERS_LOCATION);
+                    TestBase.driver = new FirefoxDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION));
                     break;
                 case Utility.Browser.InternetExplorer:
                     var options = new InternetExplorerOptions();
                     options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
-                    TestBase.driver = new InternetExplorerDriver(TestBase.SELENIUM_DRIVERS_LOCATION, options);
+                    TestBase.driver = new InternetExplorerDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION), options);
                     break;
             }
+            return TestBase.driver;
         }
 
         [FindsBy(How = How.Id, Using = ":3a")]
@@ -55,7 +59,9 @@ namespace GoogleConnect
         public static List<GoogleEmail> GetEmailData(int numberOfItems)
         {
 
-            var allEmails = TestBase.driver.FindElements(By.XPath("//*[@class='zF']")).Count;
+            var allEmails = TestBase.driver.FindElements(By.XPath("//*[@class='zF']")).Count; //
+            var read = TestBase.driver.FindElements(By.XPath("//*[@class='yP']")).Count; //
+
             var unreadEmeil = TestBase.driver.FindElements(By.XPath("//*[@class='bsU']")).Count;
 
             var emails = TestBase.driver.FindElements(By.XPath("//*[@class=':3a']"));
@@ -83,7 +89,7 @@ namespace GoogleConnect
                 var date = colVals[1].Text;
                 var subject = colVals[6].Text;
 
-                result.Add(new GoogleEmail(from, date, subject));
+                result.Add(new GoogleEmail(from, date, subject, true));
                 index++;
 
                 // if we have reached the number we want then bomb out
@@ -95,5 +101,76 @@ namespace GoogleConnect
             }
             return result;
         }
+
+        /// <summary>
+        /// Login helper method
+        /// </summary>
+        /// <param name="UserName"></param>
+        /// <param name="Password"></param>
+        /// <returns></returns>
+        public static IWebDriver Login(string UserName, string Password)
+        {            
+            LoginPage page = new LoginPage(Browser.Chrome);
+            page.Open();
+            page.EnterUserName(UserName);
+            page.ClickNext();
+            page.EnterPassword(Password);
+            page.ClickLogin();
+
+            //Verify login was successful other tests should not continue if this fails
+            NUnit.Framework.Assert.IsTrue(true, TestBase.UserName);
+
+            return driver;
+        }
+
+        ////Wait intill page exists
+        ////this will search for the element until a timeout is reached
+        //public static IWebElement WaitUntilElementExists(By elementLocator, int timeout = 10)
+        //{
+        //    try
+        //    {
+        //        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+        //        return wait.Until(ExpectedConditions.ElementExists(elementLocator));
+        //    }
+        //    catch (NoSuchElementException)
+        //    {
+        //        Console.WriteLine("Element with locator: '" + elementLocator + "' was not found in current context page.");
+        //        throw;
+        //    }
+        //}
+
+        ////Wait untill page visible
+        ////this will search for the element until a timeout is reached
+        //public static IWebElement WaitUntilElementVisible(By elementLocator, int timeout = 10)
+        //{
+        //    try
+        //    {
+        //        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+        //        return wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
+        //    }
+        //    catch (NoSuchElementException)
+        //    {
+        //        Console.WriteLine("Element with locator: '" + elementLocator + "' was not found.");
+        //        throw;
+        //    }
+        //}
+
+
+        //Wait untill element is clickable
+        //this will search for the element until a timeout is reached
+        public static IWebElement WaitUntilElementClickable(By elementLocator, int timeout = 10)
+        {
+            try
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+                return wait.Until(ExpectedConditions.ElementToBeClickable(elementLocator));
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("Element with locator: '" + elementLocator + "' was not found in current context page.");
+                throw;
+            }
+        }
+
     }
 }
