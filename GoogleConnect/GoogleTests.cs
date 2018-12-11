@@ -83,7 +83,7 @@ public class GoogleTests
         NUnit.Framework.Assert.IsTrue(true, TestBase.Email);
 
         //get emails and their content
-        List<GoogleEmail> emails = Utility.GetEmailData(2);
+        List<GoogleEmail> emails = Utility.GetEmailData(6);
 
 
         //sign out

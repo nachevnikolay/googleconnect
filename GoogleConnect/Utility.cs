@@ -49,12 +49,11 @@ namespace GoogleConnect
             }
         }
 
-        [FindsBy(How = How.Id, Using = ":3a")]
-        private IWebElement TableOfEmails;
+        //[FindsBy(How = How.Id, Using = ":3a")]
+        //private IWebElement EmailsTable;
 
         public static List<GoogleEmail> GetEmailData(int numberOfItems)
         {
-
             var allEmails = TestBase.driver.FindElements(By.XPath("//*[@class='zF']")).Count;
             var unreadEmeil = TestBase.driver.FindElements(By.XPath("//*[@class='bsU']")).Count;
 
