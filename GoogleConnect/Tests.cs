@@ -67,7 +67,6 @@ public class Tests : TestBase
         // Assert/Validate emails
 
         inbox.Compose();
-
     }
     
     [Test]
