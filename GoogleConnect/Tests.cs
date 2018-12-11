@@ -16,10 +16,9 @@ using GoogleConnect;
 
 [TestFixture]
 public class Tests : TestBase
-{
-
-    //TODO: Split tests in different file 
+{ 
     #region Tests validating the functionality of the framework
+    //TODO: Split tests in different 
 
     /// <summary>
     /// Test Gmail site works with all supported browsers
@@ -59,14 +58,16 @@ public class Tests : TestBase
     {
         InboxPage inbox = new InboxPage(UserName, Password);
 
+        List<GoogleEmail> emails = new List<GoogleEmail>();
 
         //Write test to load emails
-        inbox.GetEmails();
+        emails = inbox.GetEmails(4, Utility.EmailState.Unread);
 
+        //TODO
+        // Assert/Validate emails
 
         inbox.Compose();
 
-        inbox.SignOut();
     }
     
     [Test]
@@ -76,8 +77,7 @@ public class Tests : TestBase
         InboxPage inbox = new InboxPage(UserName, Password);
         ComposePage compose = new ComposePage(inbox);
         compose.CloseNewEmailWindow();
-        //get emails and their content
-        //List<GoogleEmail> emails = Utility.GetEmailData(2);
+ 
         compose = new ComposePage(inbox);
         compose.CloseAndDiscardDraft();
         inbox.SignOut();
@@ -87,47 +87,28 @@ public class Tests : TestBase
     [TestCase(Utility.Browser.Firefox)]
     public void LoginTest(Utility.Browser browser)
     {
-        //start browser
-        Utility.StartBrowserDriver(browser);
+        //Sign in 
+        IWebDriver driver = Utility.Login(browser);
 
-        //navigate to gmail
-        TestBase.driver.Navigate().GoToUrl(TestBase.LOGIN_URL);
-        //string result = TestBase.driver.PageSource;
+        //Sign out
+        driver.FindElement(By.XPath(ACCOUNT_OPTIONS_DROPDOWN_ID)).Click();
 
-        //enter credentials
-        var loginBox = TestBase.driver.FindElement(By.Id(TestBase.USERNAME_TEXTBOX_ID));
-        loginBox.SendKeys(TestBase.UserName);
-
-        var move = TestBase.driver.FindElement(By.Id(TestBase.USERNAME_SUBMIT_BUTTON_ID));
-        move.Click();
-
-        var pwBox = TestBase.driver.FindElement(By.Name(TestBase.PASSWORD_TEXTBOX_ID));
-        pwBox.SendKeys(TestBase.Password);
-
-        var signinButton = TestBase.driver.FindElement(By.Id(TestBase.PASSWORD_SUBMIT_BUTTON_ID));
-        signinButton.Click();
-
-
-        //verify we are logged in by looking for test account's name
-        NUnit.Framework.Assert.IsTrue(true, TestBase.UserName);
-
-        //get emails and their content
-        //List<GoogleEmail> emails = Utility.GetEmailData(2);
-
-
-        //sign out
-        TestBase.driver.FindElement(By.ClassName(TestBase.ACCOUNT_OPTIONS_DROPDOWN_ID)).Click();
-        
-        TestBase.driver.FindElement(By.Id(TestBase.SIGNOUT_BUTTON_ID)).Click();
+        driver.FindElement(By.Id(TestBase.SIGNOUT_BUTTON_ID)).Click();
     }
+
+    //TODO:
+    //Test mark read emails
+    //Test mark unread emails
+    //Test send email
 
     #endregion
 
     #region Tests validating Gmail functionality
 
-    //TODO:
-    //Test Gmmail Signin
-    //Test read new unread emails
+    //TODO: 
+    //Build TDD infrastructure to have Json files read in by tests
+    //Write Json files with test suite split by functionality and priority
 
+    
     #endregion
 }
