@@ -1,25 +1,13 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Interactions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System;
 using System.Configuration;
 using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Support.PageObjects;
-using GoogleConnect;
 
 namespace GoogleConnect
 {
      public class TestBase
     {
-        #region TestConfig
-
         public static IWebDriver driver;
         public static WebDriverWait timeout;
 
@@ -46,15 +34,13 @@ namespace GoogleConnect
 
         public static string SELENIUM_DRIVERS_LOCATION = @"seleniumdrivers\";
 
-        #endregion
 
         /// <summary>
-        /// Read in App.config
+        /// Read in configuration settings from App.config
         /// </summary>
         public void LoadTestSettings()
         {
-            //Read app config values for test infrastructure configuration. If missing use the default values  
-
+            //Read app config values for test infrastructure configuration. If missing use the default values provided here 
             string email = ReadConfigurationSetting(EMAIL_APP_CONFIG_ID);
             if (email != null)
             {
@@ -100,6 +86,9 @@ namespace GoogleConnect
             LoadTestSettings();
         }
 
+        /// <summary>
+        /// Clean up for the full test run
+        /// </summary>
         [OneTimeTearDown]
         public void Cleanup()
         {
@@ -112,7 +101,6 @@ namespace GoogleConnect
         public void Setup()
         {
             //start the browser for this test case
-
         }
 
         /// <summary>
@@ -124,6 +112,5 @@ namespace GoogleConnect
             //close browser
             driver.Quit();
         }
-
     }
 }

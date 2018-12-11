@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.PageObjects;
-using System.Threading;
 
 namespace GoogleConnect
 {
+    /// <summary>
+    /// Inbox page control class encapsulating functionality and content manipulation on the inbox page
+    /// </summary>
     public class InboxPage : TestBase
     {
-
+        // XPath IDs eventually extract all static content to separate file
         private static string XPATH_UNREAD_EMAILS = "//*[@class='zA yO']";
         private static string XPATH_READ_EMAILS = "//*[@class='zA zE']";
 
@@ -26,45 +22,64 @@ namespace GoogleConnect
         private static string XPATH_ATTRIBUTE_NAME = "name";
         private readonly IWebDriver _driver;
 
-        //Get a successfull login context and pass it to the InboxPage constructor
+        #region Constructors
+
+        /// <summary>
+        /// Get a successfull login context and pass it to the InboxPage constructor
+        /// </summary>
+        /// <param name="UserName"></param>
+        /// <param name="Password"></param>
         public InboxPage(string UserName, string Password)
         {
             _driver = Utility.Login(UserName, Password);
         }
 
+        #endregion
+
+        #region Actions
 
         IWebElement drpdownAccountBubble => _driver.FindElement(By.XPath(ACCOUNT_OPTIONS_DROPDOWN_ID));
         IWebElement btnSignOut => _driver.FindElement(By.Id(SIGNOUT_BUTTON_ID));
         IWebElement btnCompose => _driver.FindElement(By.XPath(COMPOSE_NEW_EMAIL_BUTTON_ID));
 
-        //Actions
+        /// <summary>
+        /// Open new email popup window
+        /// </summary>
+        /// <returns></returns>
         public IWebDriver Compose()
         {
             Utility.WaitUntilElementClickable(By.XPath(COMPOSE_NEW_EMAIL_BUTTON_ID));
             btnCompose.Click();
             return _driver;
         }
+
+        /// <summary>
+        /// Sign out of Gmail
+        /// </summary>
         public void SignOut()
         {
-            //Utility.WaitUntilElementClickable(By.XPath(ACCOUNT_OPTIONS_DROPDOWN_ID));
             drpdownAccountBubble.Click();
 
-            //Utility.WaitUntilElementClickable(By.Id(SIGNOUT_BUTTON_ID));
             btnSignOut.Click();
         }
 
-        //TODO: Write email list related actions
-        //Get count of unread emails
-        //Get count of total emails
-
-
-        //Get list of latest unread emails
+        /// <summary>
+        /// Get list of latest emails
+        /// Can specify number of emails and type (Read, Unread, All)
+        /// </summary>
+        /// <param name="numberOfEmails">How many of the latest emails to fetch. 
+        /// Will return all available emails from the front page if this is larger</param>
+        /// <param name="emailState">Fetch Read, Unread or All type of emails</param>
+        /// <returns></returns>
         public List<GoogleEmail> GetEmails(int numberOfEmails, Utility.EmailState emailState)
         {
             var result = new List<GoogleEmail>();
 
             List<IWebElement> emailsToProcess = new List<IWebElement>();
 
+            //Waiting on content being fuly loaded and visible
+            //TODO: This needs to be abstracted away as now I peppered it across the code as needed with the limited amount of time 
+            // test results history to know what elements are randomly failing 
             Utility.WaitUntilElementClickable(By.XPath(XPATH_UNREAD_EMAILS));
             Utility.WaitUntilElementClickable(By.XPath(XPATH_READ_EMAILS));
 
@@ -116,8 +131,9 @@ namespace GoogleConnect
             return result;
         }
 
-        //Get list of all emails on front page 
-
+        //TODO: Write email list related actions
+        //Get count of unread emails
+        //Get count of total emails
 
         //TODO: write single email related actions
         //MarkAsRead()
@@ -125,7 +141,8 @@ namespace GoogleConnect
         //Delete()
         //OpenMail()
 
-
+        #endregion
+        
         //Validation
         //TODO: write helper Assert/Validate functions to be used in Tests
     }

@@ -2,31 +2,32 @@
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Interactions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System;
-using System.Configuration;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
-using GoogleConnect;
 
 namespace GoogleConnect
 {
+    /// <summary>
+    /// Tests and user scenarios related functionality
+    /// </summary>
     [TestFixture]
     public class Utility : TestBase
     {
-        int timeout = 10; // seconds
-
+        /// <summary>
+        /// REturns a full path from currently working folder
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static string GetFullPath(string filePath)
         {
             string solutionParentDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
             return Path.Combine(solutionParentDirectory, filePath);
-        }
-        
+        }        
+
         public enum Browser
         {
             Chrome = 1,
@@ -41,6 +42,11 @@ namespace GoogleConnect
             All
          }
 
+        /// <summary>
+        /// Initialize the browser driver
+        /// </summary>
+        /// <param name="browser"></param>
+        /// <returns></returns>
         public static IWebDriver StartBrowserDriver(Utility.Browser browser)
         {
             switch (browser)
@@ -58,55 +64,6 @@ namespace GoogleConnect
                     break;
             }
             return TestBase.driver;
-        }
-
-        [FindsBy(How = How.Id, Using = ":3a")]
-        private IWebElement TableOfEmails;
-
-        public static List<GoogleEmail> GetEmailData(int numberOfItems)
-        {
-
-            var allEmails = TestBase.driver.FindElements(By.XPath("//*[@class='zF']")).Count; //
-            var read = TestBase.driver.FindElements(By.XPath("//*[@class='yP']")).Count; //
-
-            var unreadEmeil = TestBase.driver.FindElements(By.XPath("//*[@class='bsU']")).Count;
-
-            var emails = TestBase.driver.FindElements(By.XPath("//*[@class=':3a']"));
-            numberOfItems = allEmails;
-
-
-            var result = new List<GoogleEmail>();
-            var allRows = TestBase.driver.FindElements(By.TagName("tr"));
-            string test = allRows[0].Text;
-            string test1 = allRows[1].Text;
-
-            var index = 0;
-
-            foreach (IWebElement elem in allRows)
-            {
-                var colVals = elem.FindElements(By.TagName("td"));
-                string test2 = colVals[0].Text;
-                string test3 = colVals[1].Text;
-                string test4 = elem.Text;
-
-
-                // what we are looking for is col4 - from, col 5 desc and col 8 - time
-                // bad to hard code this but it should not likely change
-                var from = colVals[0].Text.ToString();
-                var date = colVals[1].Text;
-                var subject = colVals[6].Text;
-
-                result.Add(new GoogleEmail(from, date, subject, true));
-                index++;
-
-                // if we have reached the number we want then bomb out
-                if (index == numberOfItems)
-                {
-                    break;
-                }
-
-            }
-            return result;
         }
 
         /// <summary>
@@ -157,8 +114,12 @@ namespace GoogleConnect
             return Login(UserName, Password, Utility.DefaultBrowser);
         }
 
-        //Wait untill element is clickable
-        //this will search for the element until a timeout is reached
+        /// <summary>
+        /// Wait untill element is clickable or until a timeout is reached
+        /// </summary>
+        /// <param name="elementLocator"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public static IWebElement WaitUntilElementClickable(By elementLocator, int timeout = 10)
         {
             try
@@ -172,6 +133,5 @@ namespace GoogleConnect
                 throw;
             }
         }
-
     }
 }

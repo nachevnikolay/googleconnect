@@ -1,40 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.PageObjects;
+﻿using OpenQA.Selenium;
 
 namespace GoogleConnect
 {
+    /// <summary>
+    /// Compose page control class encapsulating functionality of the popup compose mail window 
+    /// </summary>
     class ComposePage : TestBase
     {
         private readonly IWebDriver _driver;
 
-        //Constructors
-        //Get a Compose page context from inbox page
+        #region Constructors
+
+        /// <summary>
+        /// Get a Compose page context from inbox page
+        /// </summary>
+        /// <param name="inboxPage"></param>
         public ComposePage(InboxPage inboxPage) => _driver = inboxPage.Compose();
 
-        //Get a successfull login context and pass it to the InboxPage constructor
+        /// <summary>
+        /// Log in, get a successfull inbox context and pass it to the Compose page constructor
+        /// </summary>
+        /// <param name="UserName">username</param>
+        /// <param name="Password">password</param>
         public ComposePage(string UserName, string Password)
         {
             InboxPage inbox = new InboxPage(UserName, Password);
             _driver = inbox.Compose();
         }
 
+        #endregion
+
+        #region Actions
+
         IWebElement btnCloseNewEmailWindow => _driver.FindElement(By.ClassName("Ha"));
         IWebElement btnCloseAndDiscardDraft => _driver.FindElement(By.ClassName("oh"));
 
 
-        //Actions
+        /// <summary>
+        /// Close the compose new email popup window. Draft is saved if there are any changes made to the form
+        /// </summary>
         public void CloseNewEmailWindow()
         {
             Utility.WaitUntilElementClickable(By.ClassName("Ha"));
 
             btnCloseNewEmailWindow.Click();
         }
+
+        /// <summary>
+        /// Close the compose new email popup window. Draft is discarded
+        /// </summary>
         public void CloseAndDiscardDraft()
         {
             Utility.WaitUntilElementClickable(By.ClassName("oh"));
@@ -45,9 +59,8 @@ namespace GoogleConnect
         //TODO: write actions
         //SendMail()
 
+        #endregion
 
-
-        //Validation
-        //TODO: write Assert/Validate functions
+        //TODO: write any verification functions to be used by tests 
     }
 }

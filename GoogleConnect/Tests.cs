@@ -1,24 +1,12 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Interactions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System;
-using System.Configuration;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Support.PageObjects;
 using GoogleConnect;
 
 [TestFixture]
 public class Tests : TestBase
 { 
     #region Tests validating the functionality of the framework
-    //TODO: Split tests in different 
 
     /// <summary>
     /// Test Gmail site works with all supported browsers
@@ -64,7 +52,7 @@ public class Tests : TestBase
         emails = inbox.GetEmails(4, Utility.EmailState.Unread);
 
         //TODO
-        // Assert/Validate emails
+        // Assert/Validate emails content
 
         inbox.Compose();
     }
@@ -105,9 +93,8 @@ public class Tests : TestBase
     #region Tests validating Gmail functionality
 
     //TODO: 
-    //Build TDD infrastructure to have Json files read in by tests
+    //Build TDD infrastructure to have Json files read in by tests driver
     //Write Json files with test suite split by functionality and priority
-
-    
+        
     #endregion
 }
