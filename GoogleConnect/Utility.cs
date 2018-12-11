@@ -16,9 +16,10 @@ using GoogleConnect;
 
 namespace GoogleConnect
 {
+    [TestFixture]
     public class Utility : TestBase
     {
-        public string GetFullPath(string filePath)
+        public static string GetFullPath(string filePath)
         {
             string solutionParentDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
             return Path.Combine(solutionParentDirectory, filePath);
@@ -31,22 +32,23 @@ namespace GoogleConnect
             InternetExplorer
         }
 
-        public static void StartBrowserDriver(Utility.Browser browser)
+        public static IWebDriver StartBrowserDriver(Utility.Browser browser)
         {
             switch (browser)
             {
                 case Utility.Browser.Chrome:
-                    TestBase.driver = new ChromeDriver(TestBase.SELENIUM_DRIVERS_LOCATION);
+                    TestBase.driver = new ChromeDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION));
                     break;
                 case Utility.Browser.Firefox:
-                    TestBase.driver = new FirefoxDriver(TestBase.SELENIUM_DRIVERS_LOCATION);
+                    TestBase.driver = new FirefoxDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION));
                     break;
                 case Utility.Browser.InternetExplorer:
                     var options = new InternetExplorerOptions();
                     options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
-                    TestBase.driver = new InternetExplorerDriver(TestBase.SELENIUM_DRIVERS_LOCATION, options);
+                    TestBase.driver = new InternetExplorerDriver(GetFullPath(TestBase.SELENIUM_DRIVERS_LOCATION), options);
                     break;
             }
+            return TestBase.driver;
         }
 
         [FindsBy(How = How.Id, Using = ":3a")]
