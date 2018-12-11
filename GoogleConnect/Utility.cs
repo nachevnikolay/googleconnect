@@ -19,8 +19,6 @@ namespace GoogleConnect
     [TestFixture]
     public class Utility : TestBase
     {
-        int timeout = 10; // seconds
-
         public static string GetFullPath(string filePath)
         {
             string solutionParentDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
