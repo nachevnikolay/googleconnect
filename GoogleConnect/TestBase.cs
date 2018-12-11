@@ -35,7 +35,7 @@ namespace GoogleConnect
 
         public static string COMPOSE_NEW_EMAIL_BUTTON_ID = "//div[contains(text(),'Compose')]";
         public static string CLOSE_NEW_EMAIL_WINDOW_BUTTON_ID = "Ha";
-        public static string ACCOUNT_OPTIONS_DROPDOWN_ID = "gb_bb";
+        public static string ACCOUNT_OPTIONS_DROPDOWN_ID = "//*[@class='gb_b gb_hb gb_R']";
         public static string SIGNOUT_BUTTON_ID = "gb_71";
         public static string LOGGED_IN_ID = ":k9";
 

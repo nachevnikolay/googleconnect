@@ -34,6 +34,13 @@ namespace GoogleConnect
             InternetExplorer
         }
 
+        public enum EmailState
+        {
+            Unread = 1,
+            Read,
+            All
+         }
+
         public static IWebDriver StartBrowserDriver(Utility.Browser browser)
         {
             switch (browser)
@@ -108,13 +115,13 @@ namespace GoogleConnect
         /// <param name="UserName"></param>
         /// <param name="Password"></param>
         /// <returns></returns>
-        public static IWebDriver Login(string UserName, string Password)
+        public static IWebDriver Login(string userName, string password, Utility.Browser browser)
         {            
-            LoginPage page = new LoginPage(Browser.Chrome);
+            LoginPage page = new LoginPage(browser);
             page.Open();
-            page.EnterUserName(UserName);
+            page.EnterUserName(userName);
             page.ClickNext();
-            page.EnterPassword(Password);
+            page.EnterPassword(password);
             page.ClickLogin();
 
             //Verify login was successful other tests should not continue if this fails
@@ -123,38 +130,32 @@ namespace GoogleConnect
             return driver;
         }
 
-        ////Wait intill page exists
-        ////this will search for the element until a timeout is reached
-        //public static IWebElement WaitUntilElementExists(By elementLocator, int timeout = 10)
-        //{
-        //    try
-        //    {
-        //        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
-        //        return wait.Until(ExpectedConditions.ElementExists(elementLocator));
-        //    }
-        //    catch (NoSuchElementException)
-        //    {
-        //        Console.WriteLine("Element with locator: '" + elementLocator + "' was not found in current context page.");
-        //        throw;
-        //    }
-        //}
+        /// <summary>
+        /// Login helper method overload with default browser
+        /// </summary>
+        /// <returns></returns>
+        public static IWebDriver Login(string userName, string password)
+        {
+            return Login(userName, password, Utility.DefaultBrowser);
+        }
 
-        ////Wait untill page visible
-        ////this will search for the element until a timeout is reached
-        //public static IWebElement WaitUntilElementVisible(By elementLocator, int timeout = 10)
-        //{
-        //    try
-        //    {
-        //        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
-        //        return wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
-        //    }
-        //    catch (NoSuchElementException)
-        //    {
-        //        Console.WriteLine("Element with locator: '" + elementLocator + "' was not found.");
-        //        throw;
-        //    }
-        //}
+        /// <summary>
+        /// Login helper method overload with default credentials
+        /// </summary>
+        /// <returns></returns>
+        public static IWebDriver Login(Utility.Browser browser)
+        {
+            return Login(UserName, Password, browser);
+        }
 
+        /// <summary>
+        /// Login helper method overload with default credentials and browser
+        /// </summary>
+        /// <returns></returns>
+        public static IWebDriver Login()
+        {
+            return Login(UserName, Password, Utility.DefaultBrowser);
+        }
 
         //Wait untill element is clickable
         //this will search for the element until a timeout is reached
@@ -167,7 +168,7 @@ namespace GoogleConnect
             }
             catch (NoSuchElementException)
             {
-                Console.WriteLine("Element with locator: '" + elementLocator + "' was not found in current context page.");
+                Console.WriteLine("Element : '" + elementLocator + "' was not found.");
                 throw;
             }
         }
