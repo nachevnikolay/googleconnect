@@ -12,6 +12,7 @@ using System;
 using System.Configuration;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
+using GoogleConnect;
 
 [TestClass]
 public class GoogleTests
@@ -24,7 +25,7 @@ public class GoogleTests
     static string Email = "wotcjupiter1";
     static string Password = "spaceshuttle";
     static string LOGIN_URL = "http://www.gmail.com";
-    static Browser DefaultBrowser = Browser.Chrome;
+    static Utility.Browser DefaultBrowser = Utility.Browser.Chrome;
 
     static string EMAIL_TEXTBOX_ID = "identifierId";
     static string EMAIL_SUBMIT_BUTTON_ID = "identifierNext";
@@ -45,30 +46,6 @@ public class GoogleTests
     #endregion
 
     #region HelpFunctions
-    public string GetFullPath(string filePath)
-    {
-        string solutionParentDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
-        return Path.Combine(solutionParentDirectory, filePath);
-    }
-
-
-    public enum Browser
-    {
-        Chrome = 1,
-        Firefox,
-        InternetExplorer
-    }
-
-    /// <summary>
-    /// Read in a key - value from the test configuration settings
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public static string ReadConfigurationSetting(string key)
-    {
-        var appSettings = ConfigurationManager.AppSettings;
-        return appSettings[key];
-    }
 
     #endregion
 
@@ -79,28 +56,28 @@ public class GoogleTests
     {
         //Read app config values for test infrastructure configuration. If missing use the default values  
 
-        string email = ReadConfigurationSetting(EMAIL_APP_CONFIG_ID);
+        string email = Utility.ReadConfigurationSetting(EMAIL_APP_CONFIG_ID);
         if (email != null)
         {
             Email = email;
         }
 
-        string password = ReadConfigurationSetting(PASSWORD_APP_CONFIG_ID);
+        string password = Utility.ReadConfigurationSetting(PASSWORD_APP_CONFIG_ID);
         if (password != null)
         {
             Password = password;
         }
 
-        string seleniumDriversLocation = ReadConfigurationSetting(SELENIUM_DRIVERS_LOCATION_APP_CONFIG_ID);
+        string seleniumDriversLocation = Utility.ReadConfigurationSetting(SELENIUM_DRIVERS_LOCATION_APP_CONFIG_ID);
         if (seleniumDriversLocation != null)
         {
             SELENIUM_DRIVERS_LOCATION = seleniumDriversLocation;
         }
 
-        string defaultBrowser = ReadConfigurationSetting(DEFAULT_BROWSER_APP_CONFIG_ID);
+        string defaultBrowser = Utility.ReadConfigurationSetting(DEFAULT_BROWSER_APP_CONFIG_ID);
         if (seleniumDriversLocation != null)
         {
-            DefaultBrowser = (Browser)Enum.Parse(typeof(Browser), defaultBrowser, true);
+            DefaultBrowser = (Utility.Browser)Enum.Parse(typeof(Utility.Browser), defaultBrowser, true);
         }
     }
 
@@ -138,17 +115,17 @@ public class GoogleTests
         driver.Quit();
     }
 
-    public void StartBrowserDriver(Browser browser)
+    public void StartBrowserDriver(Utility.Browser browser)
     {
         switch (browser)
         {
-            case Browser.Chrome:
+            case Utility.Browser.Chrome:
                 driver = new ChromeDriver(SELENIUM_DRIVERS_LOCATION);
                 break;
-            case Browser.Firefox:
+            case Utility.Browser.Firefox:
                 driver = new FirefoxDriver(SELENIUM_DRIVERS_LOCATION);
                 break;
-            case Browser.InternetExplorer:
+            case Utility.Browser.InternetExplorer:
                 var options = new InternetExplorerOptions();
                 options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
                 driver = new InternetExplorerDriver(SELENIUM_DRIVERS_LOCATION, options);
@@ -162,10 +139,10 @@ public class GoogleTests
     /// IDs that can be matched with data driven test cases.
     /// </summary>
     [Test]
-    [TestCase(Browser.Chrome)]
-    [TestCase(Browser.Firefox)]
-    [TestCase(Browser.InternetExplorer)]
-    public void TestBrowser(Browser browser)
+    [TestCase(Utility.Browser.Chrome)]
+    [TestCase(Utility.Browser.Firefox)]
+    [TestCase(Utility.Browser.InternetExplorer)]
+    public void TestBrowser(Utility.Browser browser)
     {
         StartBrowserDriver(browser);
         driver.Navigate().GoToUrl(LOGIN_URL);
@@ -178,8 +155,8 @@ public class GoogleTests
     /// Test Gmail Login
     /// </summary>
     [Test]
-    [TestCase(Browser.Firefox)]
-    public void Login(Browser browser)
+    [TestCase(Utility.Browser.Firefox)]
+    public void Login(Utility.Browser browser)
     {
         StartBrowserDriver(browser);
         driver.Navigate().GoToUrl(LOGIN_URL);
