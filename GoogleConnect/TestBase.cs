@@ -28,10 +28,13 @@ namespace GoogleConnect
         public static string LOGIN_URL = "http://www.gmail.com";
         public static Utility.Browser DefaultBrowser = Utility.Browser.Chrome;
 
-        public static string EMAIL_TEXTBOX_ID = "identifierId";
-        public static string EMAIL_SUBMIT_BUTTON_ID = "identifierNext";
+        public static string USERNAME_TEXTBOX_ID = "identifierId";
+        public static string USERNAME_SUBMIT_BUTTON_ID = "identifierNext";
         public static string PASSWORD_TEXTBOX_ID = "password";
         public static string PASSWORD_SUBMIT_BUTTON_ID = "passwordNext";
+
+        public static string COMPOSE_NEW_EMAIL_BUTTON_ID = "//div[contains(text(),'Compose')]";
+        public static string CLOSE_NEW_EMAIL_WINDOW_BUTTON_ID = "Ha";
         public static string ACCOUNT_OPTIONS_DROPDOWN_ID = "gb_bb";
         public static string SIGNOUT_BUTTON_ID = "gb_71";
         public static string LOGGED_IN_ID = ":k9";

@@ -17,6 +17,10 @@ using GoogleConnect;
 [TestFixture]
 public class Tests : TestBase
 {
+
+    //TODO: Split tests in different file 
+    #region Tests validating the functionality of the framework
+
     /// <summary>
     /// Test Gmail site works with all supported browsers
     /// Here params can come from test database like TFS and can be for example test case 
@@ -36,40 +40,52 @@ public class Tests : TestBase
 
     [Test]
     [TestCase(Utility.Browser.Firefox)]
-    public void TestPagesDesignPattern(Utility.Browser browser)
+    public void TestLoginPage(Utility.Browser browser)
     {
         LoginPage page = new LoginPage(browser);
         page.Open();
-        page.EnterUserName(TestBase.UserName);
+        page.EnterUserName(UserName);
         page.ClickNext();
-        page.EnterPassword(TestBase.Password);
+        page.EnterPassword(Password);
         page.ClickLogin();
 
+        //Verify login was successful
         NUnit.Framework.Assert.IsTrue(true, TestBase.UserName);
     }
 
-    public void OpenBrowser()
-    { }
-
-    public void NavigateHooverDropdown()
-    { }
-
-    public void NavigateClickDropdown()
-    { }
-
-    public void NavigateLink()
-    { }
-
-    public void ClickButton()
-    { }
-    
-
-    /// <summary>
-    /// Test Gmail Login
-    /// </summary>
     [Test]
     [TestCase(Utility.Browser.Firefox)]
-    public void Login(Utility.Browser browser)
+    public void TestInboxPage(Utility.Browser browser)
+    {
+        InboxPage inbox = new InboxPage(UserName, Password);
+
+
+        //Write test to load emails
+        inbox.GetEmails();
+
+
+        inbox.Compose();
+
+        inbox.SignOut();
+    }
+    
+    [Test]
+    [TestCase(Utility.Browser.Firefox)]
+    public void TestComposePage(Utility.Browser browser)
+    {
+        InboxPage inbox = new InboxPage(UserName, Password);
+        ComposePage compose = new ComposePage(inbox);
+        compose.CloseNewEmailWindow();
+        //get emails and their content
+        //List<GoogleEmail> emails = Utility.GetEmailData(2);
+        compose = new ComposePage(inbox);
+        compose.CloseAndDiscardDraft();
+        inbox.SignOut();
+    }
+    
+    [Test]
+    [TestCase(Utility.Browser.Firefox)]
+    public void LoginTest(Utility.Browser browser)
     {
         //start browser
         Utility.StartBrowserDriver(browser);
@@ -79,10 +95,10 @@ public class Tests : TestBase
         //string result = TestBase.driver.PageSource;
 
         //enter credentials
-        var loginBox = TestBase.driver.FindElement(By.Id(TestBase.EMAIL_TEXTBOX_ID));
+        var loginBox = TestBase.driver.FindElement(By.Id(TestBase.USERNAME_TEXTBOX_ID));
         loginBox.SendKeys(TestBase.UserName);
 
-        var move = TestBase.driver.FindElement(By.Id(TestBase.EMAIL_SUBMIT_BUTTON_ID));
+        var move = TestBase.driver.FindElement(By.Id(TestBase.USERNAME_SUBMIT_BUTTON_ID));
         move.Click();
 
         var pwBox = TestBase.driver.FindElement(By.Name(TestBase.PASSWORD_TEXTBOX_ID));
@@ -96,7 +112,7 @@ public class Tests : TestBase
         NUnit.Framework.Assert.IsTrue(true, TestBase.UserName);
 
         //get emails and their content
-        List<GoogleEmail> emails = Utility.GetEmailData(2);
+        //List<GoogleEmail> emails = Utility.GetEmailData(2);
 
 
         //sign out
@@ -104,4 +120,14 @@ public class Tests : TestBase
         
         TestBase.driver.FindElement(By.Id(TestBase.SIGNOUT_BUTTON_ID)).Click();
     }
+
+    #endregion
+
+    #region Tests validating Gmail functionality
+
+    //TODO:
+    //Test Gmmail Signin
+    //Test read new unread emails
+
+    #endregion
 }

@@ -9,14 +9,16 @@ namespace GoogleConnect
     /// </summary>
     public class GoogleEmail
     {
-        public GoogleEmail(string from, string date, string subject)
+        public GoogleEmail(string from, string subject, string date, bool unread)
         {
             From = from;
-            Date = date;
             Subject = subject;
+            Date = date;
+            Unread = unread;
         }
         public string From { get; set; }
         public string Date { get; set; }
         public string Subject { get; set; }
+        public bool Unread { get; set; }
     }
 }
